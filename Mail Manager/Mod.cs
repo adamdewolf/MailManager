@@ -1,26 +1,61 @@
-﻿using UnityEngine;
-using Colossal.Game;
-using Unity.Entities;
-using Game.Modding;
+﻿using Colossal.IO.AssetDatabase;
+using Colossal.Logging;
 using Game;
-using MailManager.Systems;
+using Game.Input;
+using Game.Modding;
+using Game.SceneFlow;
+using UnityEngine;
 
-namespace MailManager
+namespace Mail_Manager
 {
     public class Mod : IMod
     {
+        public static ILog log = LogManager.GetLogger($"{nameof(Mail_Manager)}.{nameof(Mod)}").SetShowsErrorsInUI(false);
+        private Setting m_Setting;
+        public static ProxyAction m_ButtonAction;
+        public static ProxyAction m_AxisAction;
+        public static ProxyAction m_VectorAction;
+
+        public const string kButtonActionName = "ButtonBinding";
+        public const string kAxisActionName = "FloatBinding";
+        public const string kVectorActionName = "Vector2Binding";
+
         public void OnLoad(UpdateSystem updateSystem)
         {
-            Debug.Log("MailManager Mod Loaded");
+            log.Info(nameof(OnLoad));
 
-            // Register the PostalVanTrackingSystem to update during the GameSimulation phase
-            updateSystem.UpdateAt<PostalVanTrackingSystem>(SystemUpdatePhase.GameSimulation);
+            if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
+                log.Info($"Current mod asset at {asset.path}");
+
+            m_Setting = new Setting(this);
+            m_Setting.RegisterInOptionsUI();
+            GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(m_Setting));
+
+            m_Setting.RegisterKeyBindings();
+
+            m_ButtonAction = m_Setting.GetAction(kButtonActionName);
+            m_AxisAction = m_Setting.GetAction(kAxisActionName);
+            m_VectorAction = m_Setting.GetAction(kVectorActionName);
+
+            m_ButtonAction.shouldBeEnabled = true;
+            m_AxisAction.shouldBeEnabled = true;
+            m_VectorAction.shouldBeEnabled = true;
+
+            m_ButtonAction.onInteraction += (_, phase) => log.Info($"[{m_ButtonAction.name}] On{phase} {m_ButtonAction.ReadValue<float>()}");
+            m_AxisAction.onInteraction += (_, phase) => log.Info($"[{m_AxisAction.name}] On{phase} {m_AxisAction.ReadValue<float>()}");
+            m_VectorAction.onInteraction += (_, phase) => log.Info($"[{m_VectorAction.name}] On{phase} {m_VectorAction.ReadValue<Vector2>()}");
+
+            AssetDatabase.global.LoadSettings(nameof(Mail_Manager), m_Setting, new Setting(this));
         }
 
-        public void OnUnload()
+        public void OnDispose()
         {
-            Debug.Log("MailManager Mod Unloaded");
-            // No additional cleanup needed; ECS handles system lifecycles
+            log.Info(nameof(OnDispose));
+            if (m_Setting != null)
+            {
+                m_Setting.UnregisterInOptionsUI();
+                m_Setting = null;
+            }
         }
     }
 }

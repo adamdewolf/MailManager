@@ -1,11 +1,9 @@
-// src/index.tsx
-
 import { ModRegistrar } from "cs2/modding";
-import PostalVanCounter from "./mods/PostalVanCounter";
+import { HelloWorldComponent } from "mods/hello-world";
 
 const register: ModRegistrar = (moduleRegistry) => {
-    // Add PostalVanCounter to the game UI at a specific location
-    moduleRegistry.append("GameTopRight", PostalVanCounter);
-};
+
+    moduleRegistry.append('Menu', HelloWorldComponent);
+}
 
 export default register;
