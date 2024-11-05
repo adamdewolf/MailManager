@@ -1,4 +1,4 @@
-﻿using Colossal;
+﻿/*/using Colossal;
 using Colossal.IO.AssetDatabase;
 using Game.Input;
 using Game.Modding;
@@ -7,9 +7,9 @@ using Game.UI;
 using Game.UI.Widgets;
 using System.Collections.Generic;
 
-namespace Mail_Manager
+namespace MailManager
 {
-    [FileLocation(nameof(Mail_Manager))]
+    [FileLocation(nameof(MailManager))]
     [SettingsUIGroupOrder(kButtonGroup, kToggleGroup, kSliderGroup, kDropdownGroup, kKeybindingGroup)]
     [SettingsUIShowGroupName(kButtonGroup, kToggleGroup, kSliderGroup, kDropdownGroup, kKeybindingGroup)]
     [SettingsUIKeyboardAction(Mod.kVectorActionName, ActionType.Vector2, usages: new string[] { Usages.kMenuUsage, "TestUsage" }, interactions: new string[] { "UIButton" }, processors: new string[] { "ScaleVector2(x=100,y=100)" })]
@@ -224,3 +224,4 @@ namespace Mail_Manager
         }
     }
 }
+*/

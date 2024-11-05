@@ -1,7 +1,13 @@
-﻿using Colossal.UI;
-using Unity.Entities;
+﻿using Colossal.IO.AssetDatabase;
+using Colossal.Logging;
+using Game;
+using Game.Input;
+using Game.Modding;
+using Game.SceneFlow;
 using UnityEngine;
 using MailManager.Systems;
+using Game.Settings;
+using Unity.Entities;
 
 namespace MailManager
 {
@@ -26,6 +32,16 @@ namespace MailManager
         {
             Debug.Log("MailManager Mod Unloaded");
             // Additional cleanup, if needed
+        }
+
+        public void OnDispose()
+        {
+            //log.Info(nameof(OnDispose));
+          //  if (m_Setting != null)
+         //   {
+         //       m_Setting.UnregisterInOptionsUI();
+         //       m_Setting = null;
+         //   }
         }
     }
 }
